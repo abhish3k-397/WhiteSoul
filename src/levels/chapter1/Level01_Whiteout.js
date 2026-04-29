@@ -67,6 +67,16 @@ export class Level01_Whiteout extends LevelBase {
       this.hazards.push(createSpikes(500, 460, 80, '#ff3030'));
     }
 
+    if (sublevel === 3) {
+      this.hazards.push(new Hazard(315, 350, 30, 10, {
+        type: 'troll',
+        trollType: 'pop',
+        triggerDistance: 100,
+        color: '#ff3030',
+        targetY: 310
+      }));
+    }
+
     // Goal
     const lastPlatform = layout[layout.length - 1];
     this.goal = new Goal(lastPlatform[0] + 20, lastPlatform[1] - 45);

@@ -119,7 +119,7 @@ export class LevelBase {
 
     // Update hazards
     for (let i = this.hazards.length - 1; i >= 0; i--) {
-      this.hazards[i].update(dt);
+      this.hazards[i].update(dt, this.player);
       if (this.hazards[i].dead) {
         this.hazards.splice(i, 1);
       }

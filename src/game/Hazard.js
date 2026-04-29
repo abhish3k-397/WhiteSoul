@@ -25,11 +25,18 @@ export class Hazard {
     // Zone
     this.zoneRadius = options.zoneRadius || 0;
 
+    // Troll mechanics (Level Devil style)
+    this.trollType = options.trollType || 'pop'; // 'pop', 'fall', 'vanish'
+    this.triggerDistance = options.triggerDistance || 120;
+    this.triggered = false;
+    this.originalY = y;
+    this.targetY = options.targetY !== undefined ? options.targetY : y - 30;
+
     // Custom
     this.custom = options.custom || {};
   }
 
-  update(dt) {
+  update(dt, player) {
     this.age += dt;
 
     if (this.type === 'projectile') {
@@ -40,6 +47,28 @@ export class Hazard {
     if (this.type === 'pulse') {
       this.pulsePhase += this.pulseSpeed * dt;
       this.active = Math.sin(this.pulsePhase) > 0;
+    }
+
+    if (this.type === 'troll' && player) {
+      const dx = Math.abs((player.x + player.width / 2) - (this.x + this.width / 2));
+      const dy = Math.abs((player.y + player.height / 2) - (this.y + this.height / 2));
+      
+      if (!this.triggered && dx < this.triggerDistance && dy < 200) {
+        this.triggered = true;
+      }
+
+      if (this.triggered) {
+        if (this.trollType === 'pop') {
+          // Smoothly move to targetY
+          const dy = (this.targetY - this.y) * 10 * dt;
+          this.y += dy;
+        } else if (this.trollType === 'fall') {
+          this.y += 500 * dt; // Drop down
+        } else if (this.trollType === 'vanish') {
+          this.active = false; // Disappear
+          this.visible = false;
+        }
+      }
     }
   }
 
