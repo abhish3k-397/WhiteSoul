@@ -23,7 +23,8 @@ export const useGameStore = create((set, get) => ({
   
   unlockCheat: (code) => set((state) => {
     const upper = code.toUpperCase().trim();
-    if (upper === 'YESIAMLAZY' && !state.unlockedCheats.includes(upper)) {
+    const validCheats = ['YESIAMLAZY', 'NOIAMNOTLEAVING'];
+    if (validCheats.includes(upper) && !state.unlockedCheats.includes(upper)) {
       return {
         unlockedCheats: [...state.unlockedCheats, upper],
         activeCheats: { ...state.activeCheats, [upper]: true }
@@ -68,13 +69,19 @@ export const useGameStore = create((set, get) => ({
   })),
 
   restartLevel: () => set((state) => {
-    // Clear completion progress for the current level when restarting
+    const unlocked = state.unlockedCheats || [];
+    const active = state.activeCheats || {};
+    const isLazyRespawn = unlocked.includes('NOIAMNOTLEAVING') && active['NOIAMNOTLEAVING'];
+
     const newCompleted = { ...state.completedSublevels };
-    delete newCompleted[`${state.currentLevel}-1`];
-    delete newCompleted[`${state.currentLevel}-2`];
-    delete newCompleted[`${state.currentLevel}-3`];
+    if (!isLazyRespawn) {
+      delete newCompleted[`${state.currentLevel}-1`];
+      delete newCompleted[`${state.currentLevel}-2`];
+      delete newCompleted[`${state.currentLevel}-3`];
+    }
+    
     return {
-      currentSublevel: 1,
+      currentSublevel: isLazyRespawn ? state.currentSublevel : 1,
       restartTrigger: state.restartTrigger + 1,
       completedSublevels: newCompleted,
     };
