@@ -11,7 +11,6 @@ export const useAuthStore = create((set, get) => ({
 
   // Initialize session on load
   init: async () => {
-    // Ensure we don't double-subscribe if init runs twice (HMR, etc.)
     const existingUnsub = get()._authUnsub;
     if (typeof existingUnsub === 'function') existingUnsub();
 
@@ -21,10 +20,31 @@ export const useAuthStore = create((set, get) => ({
       if (error) throw error;
 
       const session = data?.session ?? null;
-      set({ session, user: session?.user ?? null });
+      const user = session?.user ?? null;
+      set({ session, user });
 
-      const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
-        set({ session: newSession ?? null, user: newSession?.user ?? null });
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', user.id)
+          .single();
+        if (profile) set({ profile });
+      }
+
+      const { data: sub } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+        const newUser = newSession?.user ?? null;
+        set({ session: newSession ?? null, user: newUser });
+        if (newUser) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('id', newUser.id)
+            .single();
+          if (profile) set({ profile });
+        } else {
+          set({ profile: null });
+        }
       });
 
       set({ _authUnsub: () => sub?.subscription?.unsubscribe?.() });

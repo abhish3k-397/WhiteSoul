@@ -18,6 +18,10 @@ export default function MainMenu() {
   const unlockCheat = useGameStore(s => s.unlockCheat);
   const toggleCheat = useGameStore(s => s.toggleCheat);
 
+  const user = useAuthStore(s => s.user);
+  const profile = useAuthStore(s => s.profile);
+  const signOut = useAuthStore(s => s.signOut);
+
   const [showWishBox, setShowWishBox] = useState(false);
   const [showWishJar, setShowWishJar] = useState(false);
   const [cheatInput, setCheatInput] = useState('');
@@ -101,7 +105,7 @@ export default function MainMenu() {
           <button className="menu-btn" onClick={() => useGameStore.getState().setScreen('leaderboard')}>
             LEADERBOARD
           </button>
-          {useAuthStore.getState().user && (
+          {user && (
             unlockedCheats.length === 0 ? (
               <button className="menu-btn" onClick={() => setShowWishBox(true)} style={{ color: '#ffd700' }}>
                 MAKE A WISH
@@ -112,9 +116,9 @@ export default function MainMenu() {
               </button>
             )
           )}
-          {useAuthStore.getState().user ? (
-            <button className="menu-btn" style={{color: '#888', textTransform: 'none'}} onClick={() => useAuthStore.getState().signOut()}>
-              {useAuthStore.getState().profile?.username || 'SOUL'} (LOGOUT)
+          {user ? (
+            <button className="menu-btn" style={{color: '#888', textTransform: 'none'}} onClick={() => signOut()}>
+              {profile?.username || 'SOUL'} (LOGOUT)
             </button>
           ) : (
             <button className="menu-btn" onClick={() => useGameStore.getState().setScreen('auth')}>
