@@ -53,8 +53,8 @@ export class Level06_PurpleWeight extends LevelBase {
       for (const z of this.gravityZones) {
         if (z.containsEntity(this.player)) {
           this.inGravityZone = true;
-          this.physics.config.gravity = 1800 * z.multiplier;
-          this.physics.config.jumpForce = -100;
+          this.physics.config.gravity = 1800 * (z.multiplier * 0.5);
+          this.physics.config.jumpForce = -380;
           break;
         }
       }

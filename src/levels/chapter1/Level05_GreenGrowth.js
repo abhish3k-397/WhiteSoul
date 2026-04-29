@@ -22,9 +22,9 @@ export class Level05_GreenGrowth extends LevelBase {
     this.player.setSpawn(60, 340);
     this.player.reset();
     this.touchedPlatforms = new Set();
-    this.toxicFloorY = 500;
+    this.toxicFloorY = 520;
 
-    const expandRate = sublevel === 1 ? 25 : sublevel === 2 ? 45 : 70;
+    const expandRate = sublevel === 1 ? 10 : sublevel === 2 ? 20 : 35;
 
     const layouts = {
       1: [

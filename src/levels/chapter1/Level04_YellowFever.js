@@ -134,13 +134,13 @@ export class Level04_YellowFever extends LevelBase {
       ],
       3: [
         [0, 470, 100, 20],
-        [160, 410, 60, 20],
-        [290, 350, 50, 20],
-        [400, 400, 50, 20],
-        [520, 300, 50, 20],
-        [640, 360, 40, 20],
-        [750, 260, 50, 20],
-        [870, 210, 60, 20],
+        [160, 420, 60, 20],
+        [290, 370, 50, 20],
+        [400, 370, 50, 20],
+        [520, 320, 50, 20],
+        [640, 320, 40, 20],
+        [750, 270, 50, 20],
+        [870, 220, 60, 20],
       ],
     };
 
@@ -150,7 +150,7 @@ export class Level04_YellowFever extends LevelBase {
     }
 
     // Solar flares between platforms
-    const flareCount = sublevel === 1 ? 3 : sublevel === 2 ? 5 : 7;
+    const flareCount = sublevel === 1 ? 2 : sublevel === 2 ? 3 : 4;
     for (let i = 0; i < flareCount; i++) {
       const fx = 150 + i * (this.width / (flareCount + 1));
       this.flares.push(new SolarFlare(fx, 0.8 + sublevel * 0.3));
