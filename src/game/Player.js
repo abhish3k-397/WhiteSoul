@@ -43,12 +43,15 @@ export class Player {
     this.spawnY = y;
   }
 
-  die() {
+  die(type = 'hazard') {
     if (!this.alive) return;
     this.alive = false;
     this.dying = true;
     this.deathTimer = this.deathDuration;
-    import('../engine/soundEffects').then(({ sfx }) => sfx.playDeath());
+    import('../engine/soundEffects').then(({ sfx }) => {
+      if (type === 'fall') sfx.playFallDeath();
+      else sfx.playHazardDeath();
+    });
   }
 
   update(dt, input, physics) {

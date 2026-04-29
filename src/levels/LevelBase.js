@@ -85,7 +85,7 @@ export class LevelBase {
       // Check hazards
       for (const hazard of this.hazards) {
         if (hazard.overlaps(this.player)) {
-          this.onPlayerDeath(renderer);
+          this.onPlayerDeath(renderer, 'hazard');
           break;
         }
       }
@@ -97,7 +97,7 @@ export class LevelBase {
 
       // Fall out of level
       if (this.player.y > this.height + 100) {
-        this.onPlayerDeath(renderer);
+        this.onPlayerDeath(renderer, 'fall');
       }
     } else if (this.player && this.player.dying) {
       this.player.update(dt, input, this.physics);
@@ -176,10 +176,10 @@ export class LevelBase {
     ctx.restore();
   }
 
-  onPlayerDeath(renderer) {
+  onPlayerDeath(renderer, type = 'hazard') {
     if (!this.player.alive) return;
     this.deathCount++;
-    this.player.die();
+    this.player.die(type);
 
     // Death effects
     this.particles.burst(

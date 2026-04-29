@@ -9,6 +9,7 @@ import { InputManager } from '../engine/InputManager.js';
 import { Camera } from '../game/Camera.js';
 import { createLevel } from '../levels/registry.js';
 import { useGameStore } from '../store/gameStore.js';
+import { sfx } from '../engine/soundEffects.js';
 
 export default function GameCanvas() {
   const canvasRef = useRef(null);
@@ -37,6 +38,7 @@ export default function GameCanvas() {
       currentLevel.init(sublevel);
       camera.setLevelBounds(currentLevel.width, currentLevel.height);
       if (currentLevel.player) camera.snap(currentLevel.player);
+      sfx.startBgm(levelId);
     }
 
     loadLevel();
@@ -120,6 +122,7 @@ export default function GameCanvas() {
     return () => {
       unsub();
       engineRef.current?.destroy();
+      sfx.stopBgm();
     };
   }, []);
 
