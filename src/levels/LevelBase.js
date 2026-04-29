@@ -8,6 +8,7 @@ import { Platform } from '../game/Platform.js';
 import { Goal } from '../game/Goal.js';
 import { PhysicsEngine } from '../engine/Physics.js';
 import { ParticleSystem } from '../engine/ParticleSystem.js';
+import { useGameStore } from '../store/gameStore.js';
 
 // Sublevel difficulty multipliers
 const SUBLEVEL_CONFIG = {
@@ -83,8 +84,11 @@ export class LevelBase {
       }
 
       // Check hazards
+      const activeCheats = useGameStore.getState().activeCheats || {};
+      const isGod = activeCheats['GODMODE'] === true;
+
       for (const hazard of this.hazards) {
-        if (hazard.overlaps(this.player)) {
+        if (hazard.overlaps(this.player) && !isGod) {
           this.onPlayerDeath(renderer, 'hazard');
           break;
         }
@@ -96,8 +100,12 @@ export class LevelBase {
       }
 
       // Fall out of level
-      if (this.player.y > this.height + 100) {
+      if (this.player.y > this.height + 100 && !isGod) {
         this.onPlayerDeath(renderer, 'fall');
+      } else if (this.player.y > this.height + 100 && isGod) {
+        // Teleport up if fell out in God Mode
+        this.player.y = 100;
+        this.player.vy = 0;
       }
     } else if (this.player && this.player.dying) {
       this.player.update(dt, input, this.physics);

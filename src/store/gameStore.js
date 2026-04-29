@@ -23,7 +23,14 @@ export const useGameStore = create((set, get) => ({
   
   unlockCheat: (code) => set((state) => {
     const upper = code.toUpperCase().trim();
-    const validCheats = ['YESIAMLAZY', 'NOIAMNOTLEAVING'];
+    const validCheats = ['YESIAMLAZY', 'NOIAMNOTLEAVING', 'GODMODE'];
+    
+    if (upper === 'UPUPDOWNDOWNLEFTRIGHTLEFTRIGHTBA') {
+      const allUnlocked = [...new Set([...state.unlockedCheats, 'YESIAMLAZY', 'NOIAMNOTLEAVING', 'GODMODE'])];
+      const allActive = { ...state.activeCheats, YESIAMLAZY: true, NOIAMNOTLEAVING: true, GODMODE: true };
+      return { unlockedCheats: allUnlocked, activeCheats: allActive };
+    }
+
     if (validCheats.includes(upper) && !state.unlockedCheats.includes(upper)) {
       return {
         unlockedCheats: [...state.unlockedCheats, upper],
