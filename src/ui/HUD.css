@@ -96,3 +96,32 @@
   color: #8b3a3a;
   letter-spacing: 2px;
 }
+
+.hud-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #888;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.hud-btn:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.05);
+}
+
+.hud-btn.wish {
+  color: #ffd700;
+  border-color: rgba(255,215,0,0.25);
+}
+
+.hud-btn.wish:hover {
+  background: rgba(255,215,0,0.15);
+  border-color: #ffd700;
+}
