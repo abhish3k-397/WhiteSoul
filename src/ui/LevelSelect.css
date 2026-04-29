@@ -1,0 +1,163 @@
+/* LevelSelect.css — White Soul trials */
+.level-select {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: #060606;
+  padding: 50px 40px;
+  box-sizing: border-box;
+}
+
+.ls-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.ls-back {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #3a3835;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s;
+  padding: 8px 0;
+}
+
+.ls-back:hover {
+  color: #c8c2b8;
+}
+
+.ls-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 32px;
+  letter-spacing: 6px;
+  color: #e8e4df;
+  margin: 0;
+}
+
+.ls-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #3a3835;
+  margin-top: 10px;
+}
+
+.ls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.ls-card {
+  position: relative;
+  background: #0a0a0a;
+  border: 1px solid #161616;
+  padding: 24px 16px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+}
+
+.ls-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent, #333) 50%, transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.ls-card.unlocked:hover {
+  border-color: #2a2a2a;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.ls-card.unlocked:hover::before {
+  opacity: 0.4;
+}
+
+.ls-card.locked {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.ls-card.completed {
+  border-color: #1a1a1a;
+}
+
+.ls-card-index {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 36px;
+  color: var(--accent, #6a6560);
+  margin-bottom: 6px;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.ls-card-name {
+  font-size: 9px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  color: #6a6560;
+  margin-bottom: 14px;
+}
+
+.ls-card-ordeals {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ordeal {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #161616;
+  border: 1px solid #222;
+  transition: all 0.3s;
+}
+
+.ordeal.lit {
+  background: var(--accent, #e8e4df);
+  border-color: var(--accent, #e8e4df);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent, #e8e4df) 40%, transparent);
+}
+
+.ls-sealed {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: #2a2a2a;
+  letter-spacing: 3px;
+}
+
+.ls-soul-mark {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 10px;
+  color: var(--accent, #e8e4df);
+  opacity: 0.5;
+}

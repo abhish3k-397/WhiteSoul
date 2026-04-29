@@ -1,0 +1,113 @@
+/* Overlay.css — White Soul overlays */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  animation: overlayReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pause-overlay {
+  background: rgba(6, 6, 6, 0.92);
+  backdrop-filter: blur(4px);
+}
+
+.complete-overlay {
+  background: rgba(6, 6, 6, 0.88);
+  backdrop-filter: blur(2px);
+}
+
+@keyframes overlayReveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.overlay-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.overlay-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 48px;
+  letter-spacing: 12px;
+  color: #e8e4df;
+  margin: 0;
+  text-indent: 12px;
+}
+
+.overlay-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 4px;
+  margin: 0;
+}
+
+.overlay-stat {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #3a3835;
+}
+
+.stat-val {
+  color: #8b3a3a;
+}
+
+.complete-badge {
+  font-size: 32px;
+  color: #d4a574;
+  animation: badgeFloat 2.5s ease-in-out infinite;
+}
+
+@keyframes badgeFloat {
+  0%, 100% { opacity: 0.6; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-6px); }
+}
+
+.overlay-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.overlay-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  padding: 13px 44px;
+  background: transparent;
+  border: 1px solid #1a1a1a;
+  color: #6a6560;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 220px;
+}
+
+.overlay-btn:hover {
+  border-color: #3a3835;
+  color: #e8e4df;
+  transform: translateY(-1px);
+}
+
+.overlay-btn.primary {
+  border-color: #2a3a2a;
+  color: #7aaa7a;
+}
+
+.overlay-btn.primary:hover {
+  border-color: #4a6a4a;
+  color: #aaffaa;
+  box-shadow: 0 0 30px rgba(100,200,100,0.06);
+}
