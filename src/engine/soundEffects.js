@@ -115,17 +115,28 @@ class SoundEffectsManager {
     
     this.bgmActive = true;
     let step = 0;
-    const bpm = 125;
-    const stepInterval = (60 / bpm) / 4; // 16th notes
 
-    const chords = [
-      [130.81, 155.56, 196.00], // Cm
-      [146.83, 174.61, 220.00], // Dm
-      [116.54, 138.59, 174.61], // Bbm
-      [103.83, 130.81, 155.56]  // Ab
+    const levelThemes = [
+      { chords: [[130.81, 155.56, 196.00], [146.83, 174.61, 220.00]], type: 'sawtooth', bpm: 125 }, // Level 1
+      { chords: [[146.83, 174.61, 220.00], [164.81, 196.00, 246.94]], type: 'square', bpm: 130 },   // Level 2
+      { chords: [[116.54, 138.59, 174.61], [130.81, 155.56, 196.00]], type: 'sawtooth', bpm: 120 }, // Level 3
+      { chords: [[103.83, 130.81, 155.56], [116.54, 138.59, 174.61]], type: 'triangle', bpm: 128 }, // Level 4
+      { chords: [[130.81, 164.81, 196.00], [174.61, 220.00, 261.63]], type: 'sawtooth', bpm: 135 }, // Level 5
+      { chords: [[146.83, 164.81, 220.00], [196.00, 246.94, 293.66]], type: 'square', bpm: 140 },   // Level 6
+      { chords: [[164.81, 196.00, 246.94], [220.00, 261.63, 329.63]], type: 'sawtooth', bpm: 125 }, // Level 7
+      { chords: [[110.00, 130.81, 164.81], [130.81, 155.56, 196.00]], type: 'triangle', bpm: 115 }, // Level 8
+      { chords: [[98.00, 123.47, 146.83], [110.00, 130.81, 164.81]], type: 'sawtooth', bpm: 132 }, // Level 9
+      { chords: [[87.31, 110.00, 130.81], [103.83, 130.81, 155.56]], type: 'square', bpm: 145 },   // Level 10
+      { chords: [[130.81, 155.56, 196.00], [164.81, 196.00, 246.94]], type: 'sawtooth', bpm: 138 }, // Level 11
+      { chords: [[146.83, 174.61, 220.00], [174.61, 220.00, 261.63]], type: 'triangle', bpm: 122 }, // Level 12
+      { chords: [[164.81, 207.65, 246.94], [196.00, 246.94, 293.66]], type: 'sawtooth', bpm: 150 }  // Level 13
     ];
     
-    const chord = chords[(levelIndex - 1) % chords.length];
+    const theme = levelThemes[(levelIndex - 1) % levelThemes.length];
+    const bpm = theme.bpm;
+    const stepInterval = (60 / bpm) / 4; 
+
+    const chordSet = theme.chords;
 
     this.bgmTimer = setInterval(() => {
       const now = this.ctx.currentTime;
@@ -147,8 +158,10 @@ class SoundEffectsManager {
       if (step % 2 === 0) {
         const bass = this.ctx.createOscillator();
         const bassGain = this.ctx.createGain();
-        const note = chord[Math.floor(step / 4) % chord.length] / 2; // Drop one octave
-        bass.type = 'sawtooth';
+        const currentChord = chordSet[Math.floor(step / 8) % chordSet.length];
+        const note = currentChord[Math.floor(step / 2) % currentChord.length] / 2; 
+        
+        bass.type = theme.type;
         bass.frequency.setValueAtTime(note, now);
         bassGain.gain.setValueAtTime(0.15, now);
         bassGain.gain.linearRampToValueAtTime(0.01, now + stepInterval * 1.5);
