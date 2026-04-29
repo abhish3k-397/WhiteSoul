@@ -70,6 +70,7 @@ export const useGameStore = create((set, get) => ({
         screen: 'levelComplete',
         completedSublevels: completed,
       });
+      import('../engine/soundEffects').then(({ sfx }) => sfx.playVictory());
     } else {
       const nextLevel = state.currentLevel + 1;
       set({
@@ -77,6 +78,7 @@ export const useGameStore = create((set, get) => ({
         completedSublevels: completed,
         highestUnlocked: Math.max(state.highestUnlocked, nextLevel),
       });
+      import('../engine/soundEffects').then(({ sfx }) => sfx.playVictory());
     }
   },
 

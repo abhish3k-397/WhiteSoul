@@ -48,6 +48,7 @@ export class Player {
     this.alive = false;
     this.dying = true;
     this.deathTimer = this.deathDuration;
+    import('../engine/soundEffects').then(({ sfx }) => sfx.playDeath());
   }
 
   update(dt, input, physics) {
@@ -76,6 +77,7 @@ export class Player {
       this.vy = physics.config.jumpForce;
       this.grounded = false;
       input.consumeJump();
+      import('../engine/soundEffects').then(({ sfx }) => sfx.playJump());
     }
 
     // Track coyote time
