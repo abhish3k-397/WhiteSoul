@@ -5,13 +5,22 @@
  */
 import { useGameStore } from '../store/gameStore.js';
 import { useAuthStore } from '../store/authStore.js';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './MainMenu.css';
 
 export default function MainMenu() {
   const startGame = useGameStore(s => s.startLevel);
   const goToLevelSelect = useGameStore(s => s.goToLevelSelect);
   const totalDeaths = useGameStore(s => s.totalDeaths);
+  
+  const unlockedCheats = useGameStore(s => s.unlockedCheats);
+  const activeCheats = useGameStore(s => s.activeCheats);
+  const unlockCheat = useGameStore(s => s.unlockCheat);
+  const toggleCheat = useGameStore(s => s.toggleCheat);
+
+  const [showWishBox, setShowWishBox] = useState(false);
+  const [showWishJar, setShowWishJar] = useState(false);
+  const [cheatInput, setCheatInput] = useState('');
   const canvasRef = useRef(null);
 
   // Ambient particle effect on canvas
@@ -92,6 +101,17 @@ export default function MainMenu() {
           <button className="menu-btn" onClick={() => useGameStore.getState().setScreen('leaderboard')}>
             LEADERBOARD
           </button>
+          {useAuthStore.getState().user && (
+            unlockedCheats.length === 0 ? (
+              <button className="menu-btn" onClick={() => setShowWishBox(true)} style={{ color: '#ffd700' }}>
+                MAKE A WISH
+              </button>
+            ) : (
+              <button className="menu-btn" onClick={() => setShowWishJar(true)} style={{ color: '#ffd700' }}>
+                WISH JAR
+              </button>
+            )
+          )}
           {useAuthStore.getState().user ? (
             <button className="menu-btn" style={{color: '#888', textTransform: 'none'}} onClick={() => useAuthStore.getState().signOut()}>
               {useAuthStore.getState().profile?.username || 'SOUL'} (LOGOUT)
@@ -118,6 +138,88 @@ export default function MainMenu() {
         <span>·</span>
         <span>ESC to pause</span>
       </div>
+
+      {/* Wish Box Overlay */}
+      {showWishBox && (
+        <div className="overlay complete-overlay" style={{ background: 'rgba(6, 6, 6, 0.95)' }}>
+          <div className="overlay-content" style={{ maxWidth: '400px' }}>
+            <h2 className="overlay-title" style={{ color: '#ffd700' }}>Make a Wish</h2>
+            <p className="overlay-subtitle">Speak your hidden desire.</p>
+            <input 
+              type="text" 
+              value={cheatInput}
+              onChange={(e) => setCheatInput(e.target.value)}
+              placeholder="Enter Code"
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid #444',
+                color: '#fff',
+                fontFamily: '"JetBrains Mono", monospace',
+                textAlign: 'center',
+                marginBottom: '15px',
+                outline: 'none'
+              }}
+            />
+            <div className="overlay-buttons" style={{ display: 'flex', gap: '10px' }}>
+              <button 
+                className="overlay-btn primary" 
+                onClick={() => {
+                  unlockCheat(cheatInput);
+                  setCheatInput('');
+                  setShowWishBox(false);
+                }}
+              >
+                SUBMIT
+              </button>
+              <button className="overlay-btn" onClick={() => { setShowWishBox(false); setCheatInput(''); }}>
+                CLOSE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Wish Jar Overlay */}
+      {showWishJar && (
+        <div className="overlay complete-overlay" style={{ background: 'rgba(6, 6, 6, 0.95)' }}>
+          <div className="overlay-content" style={{ maxWidth: '400px' }}>
+            <h2 className="overlay-title" style={{ color: '#ffd700' }}>Wish Jar</h2>
+            <p className="overlay-subtitle">Active incantations in your soul.</p>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginBottom: '20px' }}>
+              {unlockedCheats.map(cheat => (
+                <div 
+                  key={cheat} 
+                  onClick={() => toggleCheat(cheat)}
+                  style={{
+                    padding: '12px',
+                    background: activeCheats[cheat] ? 'rgba(255, 215, 0, 0.15)' : 'rgba(255,255,255,0.05)',
+                    border: activeCheats[cheat] ? '1px solid #ffd700' : '1px solid rgba(255,255,255,0.1)',
+                    color: activeCheats[cheat] ? '#ffd700' : '#aaa',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    fontFamily: '"JetBrains Mono", monospace',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  {cheat === 'YESIAMLAZY' ? 'YESIAMLAZY (Shift + N to Skip)' : cheat}
+                </div>
+              ))}
+            </div>
+
+            <div className="overlay-buttons" style={{ display: 'flex', gap: '10px' }}>
+              <button className="overlay-btn primary" onClick={() => setShowWishBox(true)}>
+                WISH MORE
+              </button>
+              <button className="overlay-btn" onClick={() => setShowWishJar(false)}>
+                CLOSE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

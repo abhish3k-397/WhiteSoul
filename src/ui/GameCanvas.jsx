@@ -139,6 +139,16 @@ export default function GameCanvas() {
         if (state.screen === 'playing') store.getState().setScreen('paused');
         else if (state.screen === 'paused') store.getState().setScreen('playing');
       }
+      
+      // YESIAMLAZY Cheat: Shift + N to Skip Sublevel
+      if (e.shiftKey && e.code === 'KeyN' && state.screen === 'playing') {
+        const unlocked = state.unlockedCheats || [];
+        const active = state.activeCheats || {};
+        if (unlocked.includes('YESIAMLAZY') && active['YESIAMLAZY']) {
+          console.log('[Cheat Active] Skipping sublevel...');
+          store.getState().completeSublevel();
+        }
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);

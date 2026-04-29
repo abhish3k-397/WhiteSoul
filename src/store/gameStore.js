@@ -17,7 +17,27 @@ export const useGameStore = create((set, get) => ({
 
   // Progress
   completedSublevels: {}, // { "1-1": true, "1-2": true, etc. }
-  highestUnlocked: 1,
+  // Cheats
+  unlockedCheats: [], 
+  activeCheats: {},   
+  
+  unlockCheat: (code) => set((state) => {
+    const upper = code.toUpperCase().trim();
+    if (upper === 'YESIAMLAZY' && !state.unlockedCheats.includes(upper)) {
+      return {
+        unlockedCheats: [...state.unlockedCheats, upper],
+        activeCheats: { ...state.activeCheats, [upper]: true }
+      };
+    }
+    return {};
+  }),
+  
+  toggleCheat: (code) => set((state) => ({
+    activeCheats: { 
+      ...state.activeCheats, 
+      [code]: !state.activeCheats[code] 
+    }
+  })),
 
   // Actions
   setScreen: (screen) => set({ screen }),
