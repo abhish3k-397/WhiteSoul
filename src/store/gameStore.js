@@ -2,8 +2,11 @@
  * Zustand Game Store — Central state for game progress, screens, and settings.
  */
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-export const useGameStore = create((set, get) => ({
+export const useGameStore = create(
+  persist(
+    (set, get) => ({
   // Screen state
   screen: 'menu', // 'menu' | 'levelSelect' | 'playing' | 'paused' | 'death' | 'levelComplete'
 
@@ -17,18 +20,26 @@ export const useGameStore = create((set, get) => ({
 
   // Progress
   completedSublevels: {}, // { "1-1": true, "1-2": true, etc. }
+  highestUnlocked: 1,
+  
   // Cheats
   unlockedCheats: [], 
   activeCheats: {},   
   
   unlockCheat: (code) => set((state) => {
     const upper = code.toUpperCase().trim();
-    const validCheats = ['YESIAMLAZY', 'NOIAMNOTLEAVING', 'GODMODE'];
+    const validCheats = ['YESIAMLAZY', 'NOIAMNOTLEAVING', 'GODMODE', 'YESIWANTTOBESPOILED'];
     
     if (upper === 'UPUPDOWNDOWNLEFTRIGHTLEFTRIGHTBA') {
       const allUnlocked = [...new Set([...state.unlockedCheats, 'YESIAMLAZY', 'NOIAMNOTLEAVING', 'GODMODE'])];
       const allActive = { ...state.activeCheats, YESIAMLAZY: true, NOIAMNOTLEAVING: true, GODMODE: true };
       return { unlockedCheats: allUnlocked, activeCheats: allActive };
+    }
+
+    if (upper === 'YESIWANTTOBESPOILED') {
+      const allUnlocked = [...new Set([...state.unlockedCheats, 'YESIWANTTOBESPOILED'])];
+      const allActive = { ...state.activeCheats, YESIWANTTOBESPOILED: true };
+      return { unlockedCheats: allUnlocked, activeCheats: allActive, highestUnlocked: 13 };
     }
 
     if (validCheats.includes(upper) && !state.unlockedCheats.includes(upper)) {
@@ -142,4 +153,9 @@ export const useGameStore = create((set, get) => ({
     const state = get();
     return state.completedSublevels[`${levelId}-3`] === true;
   },
-}));
+}),
+{
+  name: 'whitesoul-progress-storage',
+}
+)
+);
