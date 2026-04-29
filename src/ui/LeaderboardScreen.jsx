@@ -39,7 +39,7 @@ export default function LeaderboardScreen() {
             return acc;
           }, {});
           
-          const sorted = Object.values(grouped).sort((a, b) => a.score - b.score).slice(0, 50);
+          const sorted = Object.values(grouped).sort((a, b) => b.score - a.score).slice(0, 50);
           setScores(sorted);
         }
       } else {
@@ -48,7 +48,7 @@ export default function LeaderboardScreen() {
           .from('scores')
           .select('deaths, time_ms, total_score, profiles(username)')
           .eq('level_id', tab)
-          .order('total_score', { ascending: true })
+          .order('total_score', { ascending: false })
           .limit(50);
           
         if (!error && data) {

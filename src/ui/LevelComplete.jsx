@@ -30,10 +30,14 @@ export default function LevelComplete() {
   const submitScore = async () => {
     setSubmitting(true);
     const timeMs = Math.floor(levelTimer * 1000);
-    const totalScore = (levelDeaths * 1000000) + timeMs;
+    
+    // High score algorithm: 100k base minus penalties for time/deaths
+    const baseScore = 100000;
+    const deathPenalty = levelDeaths * 5000;
+    const timePenalty = Math.floor((timeMs / 1000) * 100);
+    const totalScore = Math.max(1, baseScore - deathPenalty - timePenalty);
 
     try {
-      // First check if a score already exists to only update if it's better
       const { data: existing } = await supabase
         .from('scores')
         .select('total_score')
@@ -41,7 +45,7 @@ export default function LevelComplete() {
         .eq('level_id', currentLevel)
         .single();
 
-      if (!existing || totalScore < Number(existing.total_score)) {
+      if (!existing || totalScore > Number(existing.total_score)) {
         await supabase.from('scores').upsert({
           user_id: user.id,
           level_id: currentLevel,
